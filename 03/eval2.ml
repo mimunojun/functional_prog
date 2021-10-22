@@ -85,3 +85,28 @@ let rec eval2b e =
         | _ -> failwith "wrong value"
     end
   | _ -> failwith "unknown expression"
+
+  eval3 (Var("x")) (envi) ;;
+  let env = ext env "y" (IntVal 6);;
+  eval3
+  (If(Eq(Var("x"),Plus(IntLit(1), IntLit(2))), IntLit(1), IntLit(0)))
+  (env)
+  ;;
+
+  eval3
+  (Let("x", IntLit(1), Let("x", IntLit(2), Var("x"))))
+  (env)
+  ;;
+
+  eval3
+  (Let("x", IntLit(1), Let("y", Plus(Var("x"), IntLit(1)), Plus(Var("x"), Var("y")))))
+  (env)
+  ;;
+
+  eval3
+  (Let("x", IntLit(1), Plus(Let("x", IntLit(2), Plus(Var("x"), IntLit(1))), Times(Var("x"), IntLit(2)))))
+  (env)
+  ;;
+
+  let env = emptyenv();;
+  let env = ext env "x" (IntVal 3);;
