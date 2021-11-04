@@ -64,3 +64,81 @@ match e with
    let env1 = ext env x (eval3 e1 env) 
    in eval3 e2 env1
 | _ -> failwith "unknown expression"
+
+let e = emptyenv();;
+
+eval4
+   (
+      Let("x", IntLit(1), 
+         Let("f", Fun("y", Plus(Var("x"),Var("y"))),
+            Let("x", IntLit(2),
+               App(Var("f"), Plus(Var("x"), IntLit(3)))
+            )
+         )
+      )
+   )
+   (e)
+;;
+
+eval4
+   (
+      Let(
+         "f",
+         Fun(
+            "y",
+            If(
+               Eq(Var("y"), IntLit(5)) ,
+               IntLit(1),
+               Plus(IntLit(1), App(Var("f"),Plus(IntLit(1), Var("y"))))
+            )
+         ),
+         App(Var("f"),IntLit(3))
+      )
+   )
+   (e)
+;;
+
+eval6
+   (
+      LetRec("f", "x", Var("x"), IntLit(0))
+   )
+   (emptyenv())
+;;
+
+eval6
+   (
+      LetRec("f", "x", Var("x"), App(Var("f"), IntLit(0)))
+   )
+   (emptyenv())
+;;
+
+eval6
+   (
+      LetRec("f", "x", If(Eq(Var("x"),IntLit(0)), IntLit(1), Plus(IntLit(2), App(Var("f"), Plus(Var("x"), IntLit(-1))))), App(Var("f"), IntLit(0)))
+   )
+   (emptyenv())
+;;
+
+eval6
+   (
+      LetRec("f", "x", If(Eq(Var("x"),IntLit(0)), IntLit(1), Times(Var("x"), App(Var("f"), Plus(Var("x"), IntLit(-1))))), App(Var("f"), IntLit(3)))
+   )
+   (emptyenv())
+;;
+
+eval6
+   (
+      LetRec("f", "x", If(Eq(Var("x"),IntLit(0)), IntLit(1), Times(Var("x"), App(Var("f"), Plus(Var("x"), IntLit(-1))))), App(Var("f"), IntLit(5)))
+   )
+   (emptyenv())
+;;
+
+eval6
+   (
+      LetRec("fib", "x",
+            If(Greater(IntLit(3), Var("x")), IntLit(1), Plus(App(Var("fib"), Plus(Var("x"), IntLit(-1))), App(Var("fib"), Plus(Var("x"), IntLit(-2))))),
+            App(Var("fib"), IntLit(2))
+            )     
+   )
+   (emptyenv())
+;;
