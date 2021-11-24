@@ -137,8 +137,27 @@ eval6
    (
       LetRec("fib", "x",
             If(Greater(IntLit(3), Var("x")), IntLit(1), Plus(App(Var("fib"), Plus(Var("x"), IntLit(-1))), App(Var("fib"), Plus(Var("x"), IntLit(-2))))),
-            App(Var("fib"), IntLit(2))
-            )     
+            App(Var("fib"), IntLit(7))
+      )     
    )
    (emptyenv())
 ;;
+
+eval6
+   (
+      LetRec("gcd", "x",
+         
+      )
+   )
+;;
+
+tcheck1(If(BoolLit(true), IntLit(1), IntLit(100)))
+
+tcheck1( If(BoolLit(true), Plus(IntLit(1), BoolLit(false)), IntLit(100)) )
+
+tcheck1( If(BoolLit(true), Plus(IntLit(1), IntLit(2)), IntLit(100)) )
+
+tcheck1( If(BoolLit(true), BoolLit(false),  BoolLit(true)) )
+
+tcheck1( Eq(BoolLit(false),  IntLit(20)) )
+tcheck1( Eq(BoolLit(false),  BoolLit(true)) )

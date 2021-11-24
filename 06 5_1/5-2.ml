@@ -56,18 +56,18 @@ match e with
    let env1 = ext env x (eval4 e1 env) 
    in eval4 e2 env1
 | Fun(x,e1) -> FunVal(x, e1, env)
-| App(e1,e2) ->
-let funpart = (eval6 e1 env) in
-let arg = (eval6 e2 env) in
-  begin
-   match funpart with
-   | FunVal(x,body,env1) ->
-      let env2 = (ext env1 x arg) in
-      eval6 body env2
-   | RecFunVal(f,x,body,env1) ->
-      let env2 = (ext (ext env1 x arg) f funpart) in
-      eval6 body env2
-   | _ -> failwith "wrong value in App"
-  end
+  | App(e1,e2) ->
+      let funpart = (eval6 e1 env) in
+      let arg = (eval6 e2 env) in
+        begin
+         match funpart with
+         | FunVal(x,body,env1) ->
+            let env2 = (ext env1 x arg) in
+            eval6 body env2
+         | RecFunVal(f,x,body,env1) ->
+            let env2 = (ext (ext env1 x arg) f funpart) in
+            eval6 body env2
+         | _ -> failwith "wrong value in App"
+        end
 
 | _ -> failwith "unknown expression"
