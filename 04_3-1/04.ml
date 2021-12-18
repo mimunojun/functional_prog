@@ -161,3 +161,15 @@ tcheck1( If(BoolLit(true), BoolLit(false),  BoolLit(true)) )
 
 tcheck1( Eq(BoolLit(false),  IntLit(20)) )
 tcheck1( Eq(BoolLit(false),  BoolLit(true)) )
+
+(tcheck2 [("x",TInt); ("y",TInt)] e1)
+(tcheck2 [("x",TBool); ("y",TInt)] e1)
+(tcheck2 [("z",TInt); ("y",TInt)] e1)
+
+(tcheck2 [("x",TInt);] (If(Var("x"), Var("x"), IntLit(100))))
+
+(tcheck3 [("x",TInt)] (fun x -> if true then x else 100))
+(tcheck3 [("x",TInt)] (Fun("x", If(BoolLit(true), Var("x"), IntLit(100)))))
+
+(tcheck3 [("x",TInt)] (Fun("x", (If(BoolLit(true), Var("x"), IntLit(100))))))
+(tcheck3 [("x",TInt)] (Fun(x, IntLit(200))))
