@@ -104,7 +104,7 @@ and cam_env = cam_value list (* 環境は、1つのスタックフレームに�
       begin
         match (n1,n2) with
         | (CAM_IntVal(nn1),CAM_IntVal(nn2)) -> let s2 = CAM_IntVal(nn1+nn2)::s1 in trans c1 env s2
-        | (_,_) -> failwith "failed with add"
+        | (_,_) -> failwith "add error: integer expected"
       end
     | (CAM_Sub::c1,_,n1::n2::s1) ->
       (* let n1' = trans n1 env s1 in
@@ -112,7 +112,7 @@ and cam_env = cam_value list (* 環境は、1つのスタックフレームに�
       begin
         match (n1,n2) with
         | (CAM_IntVal(nn1),CAM_IntVal(nn2)) -> let s2 = CAM_IntVal(nn1-nn2)::s1 in trans c1 env s2
-        | (_,_) -> failwith "failed with sub"
+        | (_,_) -> failwith "sub error: integer expected"
       end
     | (CAM_Mul::c1,_,n1::n2::s1) ->
       (* let n1' = trans n1 env s1 in
@@ -120,7 +120,7 @@ and cam_env = cam_value list (* 環境は、1つのスタックフレームに�
       begin
         match (n1,n2) with
         | (CAM_IntVal(nn1),CAM_IntVal(nn2)) -> let s2 = CAM_IntVal(nn1*nn2)::s1 in trans c1 env s2
-        | (_,_) -> failwith "failed with mul"
+        | (_,_) -> failwith "mul error: integer expected"
       end
     | (CAM_Eq::c1,_,n1::n2::s1) ->
       (* let n1' = trans n1 env s1 in
@@ -191,6 +191,11 @@ let rec compile (e:exp) (env: string list):cam_code =
     | _ -> failwith "failed with pattern-matching"
 
 let exp1 = Let("x",IntLit(1),Let("y",IntLit(2),Plus(Var("x"),Var("y"))))
-let exp2 = LetRec("f", "x", If(Eq(Var("x"),IntLit(0)), IntLit(1), Plus(IntLit(2), App(Var("f"), Plus(Var("x"), IntLit(-1))))), App(Var("f"), IntLit(3)))
+let exp2 = LetRec("f", "x",
+                  If(Eq(Var("x"),IntLit(0)), 
+                        IntLit(1),
+                        Plus(IntLit(2), App(Var("f"), Plus(Var("x"), IntLit(-1))))
+                  ), 
+           App(Var("f"), IntLit(3)))
 let compiletop c = compile c []
 let transtop t = trans t [] []
