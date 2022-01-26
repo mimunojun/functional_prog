@@ -172,4 +172,26 @@ tcheck1( Eq(BoolLit(false),  BoolLit(true)) )
 (tcheck3 [("x",TInt)] (Fun("x", If(BoolLit(true), Var("x"), IntLit(100)))))
 
 (tcheck3 [("x",TInt)] (Fun("x", (If(BoolLit(true), Var("x"), IntLit(100))))))
-(tcheck3 [("x",TInt)] (Fun(x, IntLit(200))))
+(tcheck3 [("x",TInt)] (Fun("x", IntLit(200))))
+
+(tcheck3 [("x",TBool)] (Fun("x", (If(BoolLit(true), Var("x"), IntLit(100))))))
+
+((fun x -> if true then x else 100) (if true then y else 200))
+(tcheck3 [("x",TInt);("y",TInt)] (App(Fun("x", If(BoolLit(true), Var("x"), IntLit(100))), (If(BoolLit(true), Var("y"), IntLit(200))))));;
+
+(fun f -> (fun x -> f (f (f x + 10)))) 
+(tcheck3 [("x",TInt); ("f",TArrow(TInt, TInt))] (Fun("f", Fun("x", App(Var("f"), App(Var("f"), App(Var("f"), Plus(Var("x"), IntLit(10)))))))));;
+
+(tcheck3 [("x",TInt)] (Fun("x", If(BoolLit(true), Var("x"), IntLit(100)))));;
+
+(fun f -> (fun g -> (fun x -> f (g x)))) 
+(tcheck3 [("f",TArrow(TInt, TBool));("g",TArrow(TBool, TInt));("x",TBool)] (Fun("f", Fun("g", Fun("x", App(Var("f"), App(Var("g"), Var("x"))))))));;
+
+(if true then (fun x -> x+1) else (fun y -> y*2))
+(tcheck3 [("x",TInt);("y",TInt)] (If(BoolLit(true), Fun("x", Plus(Var("x"), IntLit(1))), Fun("y", Plus(Var("y"), Var("y"))))));;
+
+fun x -> let y = x + 10 in y + 5)
+(tcheck3 [("x",TInt); ("y",TInt)] (Fun("x", Let("y", Plus(Var("x"), IntLit(10)), Plus(Var("y"), IntLit(5))))));;
+
+(tcheck3 [("x",TBool); ("y",TBool)] (Greater(Var("x"),Var("y"))));;
+(tcheck3 [("x",TInt); ("y",TInt)] (Times(Var("x"),Var("y"))));;

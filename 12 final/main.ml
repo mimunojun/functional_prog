@@ -183,7 +183,7 @@ let rec tcheck te e =
   | Greater(e1,e2) ->
       begin
         match (tcheck te e1, tcheck te e2) with
-        | (TBool,TBool) -> TBool
+        | (TInt,TInt) -> TBool
         | _ -> failwith "type error in GREATER"
       end
   | Fun(x, e1) ->
